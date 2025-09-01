@@ -1,0 +1,25 @@
+<svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f5cfda"/>
+    <stop offset="1" stop-color="#f0bccc"/>
+  </linearGradient>
+</defs>
+<rect width="100%" height="100%" rx="24" fill="none"/>
+<g transform="translate(0,10)">
+  <!-- antlers -->
+  <path d="M60,48 c-12,-20 -30,-28 -30,-10 0,10 10,12 16,12 -8,6 -10,12 -4,18" fill="none" stroke="#b07a87" stroke-width="6" stroke-linecap="round"/>
+  <path d="M160,48 c12,-20 30,-28 30,-10 0,10 -10,12 -16,12 8,6 10,12 4,18" fill="none" stroke="#b07a87" stroke-width="6" stroke-linecap="round"/>
+  <!-- head -->
+  <ellipse cx="110" cy="110" rx="70" ry="68" fill="url(#g)"/>
+  <ellipse cx="110" cy="138" rx="48" ry="34" fill="#fff5f9"/>
+  <!-- ears -->
+  <ellipse cx="62" cy="74" rx="20" ry="28" fill="#e7aebf"/>
+  <ellipse cx="158" cy="74" rx="20" ry="28" fill="#e7aebf"/>
+  <!-- eyes -->
+  <circle cx="92" cy="104" r="6" fill="#2b2437"/>
+  <circle cx="128" cy="104" r="6" fill="#2b2437"/>
+  <!-- nose -->
+  <ellipse cx="110" cy="120" rx="8" ry="6" fill="#2b2437"/>
+</g>
+</svg>

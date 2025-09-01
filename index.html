@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baby Shower de Nuestra Niña</title>
+  <meta name="description" content="Invitación al Baby Shower — confirma tu asistencia" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --card: #ffffff;
+      --accent: #ff7bbf;
+      --accent-2: #ffd1e8;
+      --accent-3: #ffe6f3;
+      --text: #2b2437;
+      --muted: #6a6079;
+      --ring: #ffd1e8;
+      --balloon1: #ffd9ec; /* rosado claro */
+      --balloon2: #ffffff; /* blanco */
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; color: var(--text); background: radial-gradient(circle at 20% -10%, #ffe9f5 0, transparent 40%), radial-gradient(circle at 90% 10%, #ffe1f0 0, transparent 40%), var(--bg); overflow-x: hidden; }
+
+    /* Layout general */
+    .page { max-width: 1120px; margin: 0 auto; padding: clamp(16px, 4vw, 28px); display: grid; gap: 20px; }
+
+    /* Cover de apertura tipo carta decorada */
+    .cover { position: fixed; inset: 0; background: linear-gradient(180deg,#fffafb,#ffeaf4); display: grid; place-items: center; z-index: 50; }
+    .cover-card { width: min(720px, 94vw); aspect-ratio: 4/5; border-radius: 26px; border: 1px solid #ffe2f1; background: url('./assets/paper.svg') center/cover no-repeat, #fff; padding: 24px; box-shadow: 0 26px 70px rgba(255, 123, 191, .28); position: relative; overflow: hidden; }
+    .cover-title { text-align: center; font-weight: 800; color: #c45b96; letter-spacing: .02em; }
+    .cover-bear { width: clamp(180px, 38vw, 260px); height: clamp(180px, 38vw, 260px); display: grid; place-items: center; margin: 18px auto; border-radius: 999px; background: linear-gradient(180deg,#fff1f8,#ffe2f1); border: 8px solid #ffe6f3; box-shadow: inset 0 10px 36px rgba(255,123,191,.18); cursor: pointer; transition: transform .2s ease; position: relative; }
+    .cover-bear:hover { transform: translateY(-2px) scale(1.02); }
+    .cover-bear img { width: 70%; height: auto; }
+    .cover-note { text-align: center; color: var(--muted); font-size: clamp(13px,2.4vw,15px); margin-bottom: 12px; }
+    .fl-corner { position: absolute; width: clamp(50px,12vw,80px); opacity: .9; }
+    .fl-tl { top: 10px; left: 10px; transform: rotate(-8deg); }
+    .fl-tr { top: 10px; right: 10px; transform: rotate(8deg) scaleX(-1); }
+    .fl-bl { bottom: 10px; left: 10px; transform: rotate(6deg); }
+    .fl-br { bottom: 10px; right: 10px; transform: rotate(-6deg) scaleX(-1); }
+
+    .hide { opacity: 0; pointer-events: none; transition: opacity .6s ease; }
+
+    /* Globos flotando */
+    .balloons { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+    .balloon { position: absolute; bottom: -140px; width: 48px; height: 62px; border-radius: 28px 28px 38px 38px; background: var(--balloon1); box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .balloon::after { content: ''; position: absolute; bottom: -18px; left: 50%; width: 2px; height: 90px; background: rgba(0,0,0,.1); transform: translateX(-50%); }
+    .balloon.white { background: var(--balloon2); }
+    @keyframes floatUp { 0% { transform: translateY(0) translateX(0) rotate(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-120vh) translateX(var(--drift, 0px)) rotate(6deg); opacity: 0; } }
+
+    /* Carta principal (formato carta real) */
+    .letter-wrap { position: relative; z-index: 2; display: grid; place-items: center; }
+    .letter { width: min(920px, 100%); margin: 12px auto; border-radius: 20px; background: url('./assets/paper.svg') center/cover no-repeat, #fff; box-shadow: 0 18px 60px rgba(255, 123, 191, .15), 0 2px 0 #ffe7f2 inset; border: 1px solid #ffe2f1; padding: clamp(18px, 3.2vw, 26px); position: relative; }
+    /* Borde ornamental */
+    .letter::before { content:''; position: absolute; inset: 10px; border-radius: 16px; border: 2px dashed #ffd3ea; pointer-events: none; }
+
+    .badge { display: inline-block; background: var(--accent-2); color: var(--text); padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .02em; border: 1px solid #ffd8ec; }
+    h1 { font-size: clamp(22px, 3.4vw, 32px); margin: 12px 0 8px; line-height: 1.25; }
+    p.lead { color: var(--muted); margin: 0 0 12px; }
+
+    /* Grilla de contenido centrada y responsive */
+    .grid { display: grid; gap: 18px; }
+    @media (min-width: 900px){ .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+    .card { background: rgba(255,255,255,.72); border: 1px solid #f7e9f3; border-radius: 18px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.04); position: relative; overflow: hidden; }
+    .title { font-size: 18px; font-weight: 700; margin: 0 0 10px; }
+    .meta { display: grid; gap: 10px; }
+    .meta-row { display: flex; align-items: center; gap: 10px; }
+    .chip { background: #fff1f8; border: 1px solid #ffd9ec; padding: 6px 10px; border-radius: 10px; font-size: 12px; }
+    .cta { display: inline-flex; align-items: center; gap: 10px; border: 0; border-radius: 14px; padding: 12px 16px; background: var(--accent); color: white; font-weight: 700; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 123, 191, .36); transition: transform .08s ease; text-decoration: none; }
+    .cta:hover { transform: translateY(-1px); }
+    .cta.secondary { background: white; color: var(--text); border: 1px solid #f2d3e6; box-shadow: none; }
+    .note { font-size: 12px; color: var(--muted); }
+    .row { display: grid; gap: 10px; }
+    @media(min-width: 560px){ .row-2 { grid-template-columns: 1fr 1fr; } }
+    label { font-size: 12px; font-weight: 600; color: var(--muted); }
+    input, select, textarea { width: 100%; padding: 12px 12px; border-radius: 12px; border: 1px solid #f0d7e8; outline: none; background: #fff; font-family: inherit; }
+    input:focus, textarea:focus { box-shadow: 0 0 0 4px var(--ring); }
+    .divider { height: 1px; background: #f3e3ee; margin: 12px 0; }
+    footer { text-align: center; color: var(--muted); font-size: 12px; margin: 8px 0 16px; }
+    .heart { animation: pulse 1.6s infinite; display: inline-block; }
+
+    /* Animales asomados en esquinas de la carta */
+    .peek { position: absolute; width: clamp(74px, 16vw, 120px); z-index: 3; }
+    .peek.deer { top: -36px; left: -36px; transform: rotate(-6deg); }
+    .peek.bunny { bottom: -36px; right: -36px; transform: rotate(6deg); }
+
+    /* Mariposas decorativas dentro de la carta */
+    .butterfly { position: absolute; width: 68px; opacity: .9; }
+    .butterfly.b1 { top: -6px; right: -6px; transform: rotate(12deg); }
+    .butterfly.b2 { bottom: -6px; left: -6px; transform: rotate(-8deg); }
+
+    .cta-wrap { display:flex; flex-direction:column; align-items:flex-start; gap:8px }
+    .see-you { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:12px; background:var(--accent-3); border:1px solid #ffd9ec; font-weight:700; color:#b34f89; }
+      /* decoraciones sueltas bajo la osita */
+    .cover-decor{ position:relative; width:100%; height: 320px; margin-top: 12px; }
+    .sticker{ position:absolute; width: clamp(110px, 28vw, 180px); aspect-ratio:1; border-radius:26px; border:1px solid #ffd9ec; background:#fff; box-shadow:0 14px 28px rgba(255,123,191,.25); overflow:hidden; display:grid; place-items:center; animation: bob 7s ease-in-out infinite; }
+    .sticker img{ width:100%; height:100%; object-fit:cover; }
+    .sticker.s1{ left:4%; top:6%; transform: rotate(-8deg); animation-delay:.3s;}
+    .sticker.s2{ right:6%; top:10%; transform: rotate(6deg); animation-delay:.9s;}
+    .sticker.s3{ left:12%; bottom:8%; transform: rotate(4deg); animation-delay:1.4s;}
+    .sticker.s4{ right:14%; bottom:4%; transform: rotate(-5deg); animation-delay:1.9s;}
+    @keyframes bob{ 0%,100%{ transform: translateY(0) rotate(var(--rot,0deg)); } 50%{ transform: translateY(-6px) rotate(var(--rot,0deg)); }}
+    @media(max-width:560px){ .cover-decor{ height: 280px; } .sticker{ width: clamp(88px, 34vw, 140px);} .sticker.s1{left:6%; top:14%;} .sticker.s2{right:6%; top:4%;} .sticker.s3{left:10%; bottom:8%;} .sticker.s4{right:10%; bottom:6%;} }
+
+  </style>
+</head>
+<body>
+  <!-- Globos -->
+  <div class="balloons" id="balloons"></div>
+
+  <!-- Portada con osita y flores en esquinas -->
+  <div class="cover" id="cover">
+    <div class="cover-card">
+      <img class="fl-corner fl-tl" src="./assets/flower-corner.svg" alt="flor" />
+      <img class="fl-corner fl-tr" src="./assets/flower-corner.svg" alt="flor" />
+      <img class="fl-corner fl-bl" src="./assets/flower-corner.svg" alt="flor" />
+      <img class="fl-corner fl-br" src="./assets/flower-corner.svg" alt="flor" />
+      <div class="cover-title">Baby Shower</div>
+      <div class="cover-bear" id="openInvite" title="Toca para abrir">
+        <img src="./assets/osita.svg" alt="Osita" />
+      </div>
+      <p class="cover-note">Toca la osita para abrir tu invitación ✨</p>
+      <div class="cover-decor">
+        <div class="sticker s1" style="--rot:-8deg; top:2%;"><img src="./assets/userimg1.png" alt="decoración 1"/></div>
+        <div class="sticker s2" style="--rot:6deg; top:2%;"><img src="./assets/userimg2.png" alt="decoración 2"/></div>
+        <div class="sticker s3" style="--rot:4deg; top:40;"><img src="./assets/userimg3.png" alt="decoración 3"/></div>
+        <div class="sticker s4" style="--rot:-4deg; top:40%"><img src="./assets/userimg4.png" alt="decoración 4"/></div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="page" id="app">
+    <section class="letter-wrap">
+      <div class="letter">
+        <img class="peek deer" src="./assets/deer.svg" alt="ciervo" />
+        <img class="peek bunny" src="./assets/bunny.svg" alt="conejita" />
+        <img class="butterfly b1" src="./assets/butterfly.svg" alt="mariposa" />
+        <img class="butterfly b2" src="./assets/butterfly.svg" alt="mariposa" />
+
+        <h1>¡Nuestro hogar se llena de alegría porque pronto llegará <span id="nombre-bebe">Alanna</span>! 👼💗</h1>
+        <p class="lead">Queremos compartir contigo esta hermosa espera en su Baby Shower.</p>
+
+        <div class="grid grid-2" style="margin-top: 12px;">
+          <section class="card">
+            <h2 class="title">Detalles del evento</h2>
+            <div class="meta">
+              <div class="meta-row"><span class="chip">📅</span> <strong>Sábado 4 de octubre de 2025</strong></div>
+              <div class="meta-row"><span class="chip">🕒</span> <strong>3:00 p.m.</strong></div>
+              <div class="meta-row"><span class="chip">📍</span> <strong>Finca La Bonita — Marinilla</strong></div>
+            </div>
+            <div class="divider"></div>
+            <div class="cta-wrap">
+              <a id="btn-cal" class="cta secondary" download="BabyShower.ics">Agregar al calendario</a>
+              <span class="see-you">Te esperamos por acá ✨</span>
+            </div>
+          </section>
+          <section class="card">
+            <h2 class="title">Confirma tu asistencia</h2>
+            <form id="form-rsvp" class="row" autocomplete="on">
+              <div class="row row-2">
+                <div>
+                  <label>Tu nombre</label>
+                  <input required name="nombre" placeholder="Ej. Ana Pérez" />
+                </div>
+                <div>
+                  <label>Tu WhatsApp</label>
+                  <input name="whatsapp" inputmode="tel" placeholder="Ej. 3001234567" />
+                </div>
+              </div>
+              <div class="row row-2">
+                <div>
+                  <label>Número de acompañantes</label>
+                  <select name="acompanantes">
+                    <option value="0">Iré sola/o</option>
+                    <option value="1">+1</option>
+                    <option value="2">+2</option>
+                    <option value="3">+3</option>
+                    <option value="4">+4</option>
+                  </select>
+                </div>
+                <div>
+                  <label>¿Alguna nota?</label>
+                  <input name="nota" placeholder="Alergias, horarios, etc." />
+                </div>
+              </div>
+              <button class="cta" type="submit">Confirmar asistencia 🎉</button>
+              <p class="note">Al confirmar, se abrirá un chat de WhatsApp hacia el anfitrión con tu mensaje prellenado.</p>
+            </form>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Hecho con <span class="heart">💗</span> para celebrar a <strong id="nombre-bebe-2">Alanna</strong>.
+    </footer>
+  </main>
+
+<script>
+
+const CONFIG = {
+  nombreBebe: "Alanna",       
+  anfitrionWhatsApp: "573102371071"     
+};
+
+const $ = (q) => document.querySelector(q);
+
+// Coloca nombre niña
+document.getElementById('nombre-bebe').textContent = CONFIG.nombreBebe;
+document.getElementById('nombre-bebe-2').textContent = CONFIG.nombreBebe;
+
+// Genera archivo ICS para "Agregar al calendario"
+(function buildICS(){
+  const title = `Baby Shower de ${CONFIG.nombreBebe}`;
+  const start = toICSDate(new Date('2025-10-04T15:00:00-05:00'));
+  const end   = toICSDate(new Date('2025-10-04T18:00:00-05:00'));
+  const ics = [
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Invitación Baby Shower//ES','CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',`SUMMARY:${title}`,`DTSTART:${start}`,`DTEND:${end}`,
+    'LOCATION:Finca La Bonita — Marinilla','DESCRIPTION=¡Te esperamos!','END:VEVENT','END:VCALENDAR'].join('');
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  document.getElementById('btn-cal').href = url;
+})();
+
+function toICSDate(d){
+  const pad = (n)=> String(n).padStart(2,'0');
+  return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+}
+
+// RSVP via WhatsApp
+$('#form-rsvp').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.currentTarget);
+  const p = Object.fromEntries(fd.entries());
+  const resumen = `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}. %0A`+
+    `Nombre: ${p.nombre || '—'} %0A`+
+    `WhatsApp: ${p.whatsapp || '—'} %0A`+
+    `Acompañantes: ${p.acompanantes || '0'} %0A`+
+    `Nota: ${p.nota || '—'}`;
+  window.open(`https://wa.me/${CONFIG.anfitrionWhatsApp}?text=${resumen}`, '_blank');
+});
+
+// Globos aleatorios al cargar
+(function spawnBalloons(){
+  const root = document.getElementById('balloons');
+  const count = 16; // varios globitos
+  for(let i=0;i<count;i++){
+    const b = document.createElement('div');
+    b.className = 'balloon' + (Math.random() > .5 ? ' white' : '');
+    b.style.left = Math.floor(Math.random()*100)+'vw';
+    b.style.animation = `floatUp ${14 + Math.random()*10}s linear ${Math.random()*6}s infinite`;
+    b.style.setProperty('--drift', (Math.random()*60-30)+'px');
+    root.appendChild(b);
+  }
+})();
+
+// Portada: abrir al tocar la osita
+const cover = document.getElementById('cover');
+const openInvite = document.getElementById('openInvite');
+openInvite.addEventListener('click', ()=>{
+  cover.classList.add('hide');
+  setTimeout(()=> cover.remove(), 700);
+});
+</script>
+</body>
+</html>

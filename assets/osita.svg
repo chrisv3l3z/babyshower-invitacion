@@ -1,0 +1,35 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#ffdfef" offset="0"/>
+    <stop stop-color="#ffd1e8" offset="1"/>
+  </linearGradient>
+</defs>
+<rect width="100%" height="100%" rx="32" fill="url(#g1)"/>
+<!-- ears -->
+<circle cx="160" cy="150" r="56" fill="#e9b8c9" opacity=".8"/>
+<circle cx="352" cy="150" r="56" fill="#e9b8c9" opacity=".8"/>
+<circle cx="160" cy="150" r="34" fill="#ffddea"/>
+<circle cx="352" cy="150" r="34" fill="#ffddea"/>
+<!-- head -->
+<circle cx="256" cy="230" r="120" fill="#f0c5d4"/>
+<ellipse cx="256" cy="270" rx="76" ry="56" fill="#fff5f9"/>
+<!-- eyes -->
+<circle cx="222" cy="220" r="10" fill="#2b2437"/>
+<circle cx="290" cy="220" r="10" fill="#2b2437"/>
+<!-- nose -->
+<ellipse cx="256" cy="250" rx="12" ry="9" fill="#2b2437"/>
+<path d="M244 262q12 16 24 0" fill="none" stroke="#2b2437" stroke-width="5" stroke-linecap="round"/>
+<!-- body -->
+<ellipse cx="256" cy="380" rx="120" ry="110" fill="#f0c5d4"/>
+<ellipse cx="256" cy="390" rx="84" ry="74" fill="#fff5f9"/>
+<!-- paws -->
+<ellipse cx="176" cy="430" rx="46" ry="34" fill="#f0c5d4"/>
+<ellipse cx="336" cy="430" rx="46" ry="34" fill="#f0c5d4"/>
+<circle cx="160" cy="426" r="8" fill="#ffddea"/><circle cx="192" cy="436" r="8" fill="#ffddea"/>
+<circle cx="320" cy="436" r="8" fill="#ffddea"/><circle cx="352" cy="426" r="8" fill="#ffddea"/>
+<!-- bow -->
+<path d="M230 200c-20-8-46 10-56 24 22 10 46 10 56-24z" fill="#ff7bbf"/>
+<path d="M282 200c20-8 46 10 56 24-22 10-46 10-56-24z" fill="#ff7bbf"/>
+<circle cx="256" cy="206" r="10" fill="#e84ea5"/>
+</svg>
