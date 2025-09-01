@@ -106,6 +106,39 @@
     @keyframes bob{ 0%,100%{ transform: translateY(0) rotate(var(--rot,0deg)); } 50%{ transform: translateY(-6px) rotate(var(--rot,0deg)); }}
     @media(max-width:560px){ .cover-decor{ height: 280px; } .sticker{ width: clamp(88px, 34vw, 140px);} .sticker.s1{left:6%; top:14%;} .sticker.s2{right:6%; top:4%;} .sticker.s3{left:10%; bottom:8%;} .sticker.s4{right:10%; bottom:6%;} }
 
+   @media (max-width: 600px){
+  /* baja un poco la osita y reduce su tamaño en móviles */
+  .cover-bear{
+    width: clamp(140px, 42vw, 200px);
+    height: clamp(140px, 42vw, 200px);
+  }
+
+  /* área donde viven los stickers y su tamaño */
+  .cover-decor{ height: 240px; }
+
+  /* haz los stickers más pequeños en móvil */
+  .sticker{ width: clamp(84px, 28vw, 120px); }
+
+  /* nuevas posiciones (más abajo y separadas) */
+  .sticker.s1{ left: 10%; top: 62%; transform: rotate(-5deg); z-index: 3; }
+  .sticker.s2{ right: 10%; top: 62%; transform: rotate(4deg);  z-index: 3; }
+  .sticker.s3{ left: 28%; top: 74%; transform: rotate(2deg);   z-index: 2; }
+
+  /* encuadre para que se vean las caritas completas */
+  .sticker.s1 img{ object-position: 60% 50%; }
+  .sticker.s2 img{ object-position: 50% 45%; }
+  .sticker.s3 img{ object-position: 50% 55%; }
+}
+
+/* aún más compacto para pantallas muy pequeñas */
+@media (max-width: 380px){
+  .cover-decor{ height: 210px; }
+  .sticker{ width: 82px; }         /* fuerza un tamaño fijo más chico */
+  .sticker.s1{ left: 6%;  top: 62%; }
+  .sticker.s2{ right: 6%; top: 62%; }
+  .sticker.s3{ left: 26%; top: 74%; }
+}
+
   </style>
 </head>
 <body>
