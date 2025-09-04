@@ -44,11 +44,15 @@
         overflow-x: hidden;
       }
 
-      .cover-title, h1, h2, .title{
-    font-family: 'Style Script', 'Quicksand', cursive;
-    letter-spacing: .01em;
-  }
+      .cover-title{
+  font-family: 'Playfair Display', 'Quicksand', serif;
+  letter-spacing: .01em;
+}
 
+h1, h2, .title{
+  font-family: 'Quicksand', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  letter-spacing: .01em;
+}
 
       /* Layout general */
       .page {
@@ -694,6 +698,18 @@
     .cover-hero{ padding-inline: clamp(48px, 26vw, 100px); }
   }
 
+  .baby-name{
+  display: inline-block;
+  font-weight: 800;
+  /* más grande que el resto del h1 */
+  font-size: 1.35em;             /* base */
+  line-height: 0.95;
+  color: #c45b96;                /* acorde a tu paleta */
+}
+
+@media (min-width: 700px){
+  .baby-name{ font-size: clamp(1.35em, 2.2vw, 1.8em); }
+}
 
     </style>
   </head>
@@ -712,21 +728,10 @@
         <div class="cover-title">Baby Shower</div>
 
   <div class="cover-hero">
-    <!-- Sticker izquierdo (jirafita) -->
-    <div class="side-sticker left" aria-hidden="true">
-      <img src="./assets/userimg1.png" alt="" />
-    </div>
 
-    <!-- Osita (botón de apertura) -->
     <div class="cover-bear" id="openInvite" title="Toca para abrir">
       <img src="./assets/osita.jpg" alt="Osita" />
     </div>
-
-    <!-- Sticker derecho (koalita) -->
-    <div class="side-sticker right" aria-hidden="true">
-      <img src="./assets/userimg2.png" alt="" />
-    </div>
-  </div>
 
   <p class="cover-note">Toca la osita para abrir tu invitación ✨</p>
 
@@ -735,10 +740,9 @@
     <img src="./assets/osita2.png" alt="Ilustración baby shower" />
   </div>
 </div>
-
   </div> 
 </div>  
-
+</div>  
 
     <main class="page" id="app">
       <section class="letter-wrap">
@@ -748,8 +752,10 @@
           <img class="butterfly b1" src="./assets/butterfly.svg" alt="mariposa" />
           <img class="butterfly b2" src="./assets/butterfly.svg" alt="mariposa" />
 
-          <h1>🌸✨ ¡La espera más linda está por cumplirse! ✨🌸 Nuestro hogar se llena de ilusión porque pronto llegará
-            <span id="nombre-bebe">Alana</span>! 👶💗</h1>
+          <h1>🌸✨ ¡La espera más linda está por cumplirse! ✨🌸
+  Nuestro hogar se llena de ilusión porque pronto llegará
+  <span id="nombre-bebe" class="baby-name">Alana</span>!
+</h1>
           <p class="lead">Queremos compartir contigo esta hermosa espera en su Baby Shower.</p>
 
           <div class="grid grid-2" style="margin-top: 12px;">
