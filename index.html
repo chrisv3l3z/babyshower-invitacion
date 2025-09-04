@@ -597,6 +597,44 @@
         top: 74%;
       }
     }
+
+    /* === Ajustes de la ilustración central === */
+.cover-ill{
+  /* centrada y con espacio abajo para que no tape los stickers */
+  display: flex;
+  justify-content: center;
+  margin: 10px auto 22px;
+  width: 100%;
+}
+
+.cover-ill .ill{
+  /* un poco más pequeña y responsive */
+  width: clamp(220px, 36vw, 460px);
+  /* quitamos por completo el marco/blanco */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 22px; /* solo para redondear la imagen */
+}
+
+.cover-ill img{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 22px;
+  object-fit: contain;
+}
+
+/* Da un poco más de aire a los stickers para que no queden ocultos */
+.cover-decor{ margin-top: 12px; }
+
+/* En móviles, aún un poco más chica y más espacio */
+@media (max-width: 600px){
+  .cover-ill .ill{ width: clamp(200px, 60vw, 360px); }
+  .cover-ill{ margin-bottom: 26px; }
+}
+
   </style>
 </head>
 
@@ -616,6 +654,11 @@
         <img src="./assets/osita.jpg" alt="Osita" />
       </div>
       <p class="cover-note">Toca la osita para abrir tu invitación ✨</p>
+      <div class="cover-ill">
+  <div class="ill">
+    <img src="./assets/osita2.png" alt="Ilustración baby shower" />
+  </div>
+</div>
       <div class="cover-decor">
         <div class="sticker s1" style="--rot:-8deg; top:2%;"><img src="./assets/userimg1.png" alt="decoración 1" />
         </div>
