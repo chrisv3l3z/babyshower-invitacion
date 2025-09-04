@@ -711,6 +711,38 @@ h1, h2, .title{
   .baby-name{ font-size: clamp(1.35em, 2.2vw, 1.8em); }
 }
 
+/* La tarjeta centra a todos sus hijos verticalmente */
+.cover-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;   /* <- clave para centrar en móvil */
+  gap: 10px;
+}
+
+/* Bloque de la ilustración: 100% de ancho, contenido centrado */
+.cover-ill{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 10px auto 22px;
+}
+
+/* Imagen responsiva y centrada de verdad */
+.cover-ill .ill{
+  width: clamp(240px, 82vw, 520px);
+  height: auto;
+  display: block;
+  margin: 0 auto;       /* por si pierde el flex-parent */
+  border-radius: 22px;
+  object-fit: contain;
+}
+
+/* En móviles puedes hacerla un toque más pequeña si quieres */
+@media (max-width: 600px){
+  .cover-ill .ill{ width: clamp(220px, 88vw, 420px); }
+}
+
+
     </style>
   </head>
 
@@ -719,30 +751,26 @@ h1, h2, .title{
     <div class="balloons" id="balloons"></div>
 
     <!-- Portada con osita y flores en esquinas -->
-    <div class="cover" id="cover">
-      <div class="cover-card">
-        <img class="fl-corner fl-tl" src="./assets/flower-corner.svg" alt="flor" />
-        <img class="fl-corner fl-tr" src="./assets/flower-corner.svg" alt="flor" />
-        <img class="fl-corner fl-bl" src="./assets/flower-corner.svg" alt="flor" />
-        <img class="fl-corner fl-br" src="./assets/flower-corner.svg" alt="flor" />
-        <div class="cover-title">Baby Shower</div>
+<div class="cover" id="cover">
+  <div class="cover-card">
+    <img class="fl-corner fl-tl" src="./assets/flower-corner.svg" alt="flor" />
+    <img class="fl-corner fl-tr" src="./assets/flower-corner.svg" alt="flor" />
+    <img class="fl-corner fl-bl" src="./assets/flower-corner.svg" alt="flor" />
+    <img class="fl-corner fl-br" src="./assets/flower-corner.svg" alt="flor" />
 
-  <div class="cover-hero">
+    <div class="cover-title">Baby Shower</div>
 
     <div class="cover-bear" id="openInvite" title="Toca para abrir">
       <img src="./assets/osita.jpg" alt="Osita" />
     </div>
 
-  <p class="cover-note">Toca la osita para abrir tu invitación ✨</p>
+    <p class="cover-note">Toca la osita para abrir tu invitación ✨</p>
 
-  <div class="cover-ill">
-  <div class="ill">
-    <img src="./assets/osita2.png" alt="Ilustración baby shower" />
+    <div class="cover-ill">
+      <img class="ill" src="./assets/osita2.png" alt="Ilustración baby shower" />
+    </div>
   </div>
 </div>
-  </div> 
-</div>  
-</div>  
 
     <main class="page" id="app">
       <section class="letter-wrap">
