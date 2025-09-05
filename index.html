@@ -848,53 +848,31 @@ h1, h2, .title{
       </section>
 
       <footer>
-        Hecho con <span class="heart">💗</span> para celebrar a <strong id="nombre-bebe-2">Alana</strong>.
       </footer>
     </main>
 
     <script>
-  // ========= CONFIG =========
   const CONFIG = {
     nombreBebe: "Alana",
-    // Define aquí los dos números en formato internacional (sin +, sin espacios)
-    whatsapp: {
+    anfitriones: {
       a: "573102371071",   // anfitrión A
-      b: "573017384115"     // anfitrión B
+      b: "573017384115"    // <-- pon aquí el número B con indicativo país, sin + ni espacios
     },
-    // Valor por defecto si el link NO trae parámetro
-    defaultHostKey: "a"
+    defaultHost: "a"       // si no viene ?host=, usa este
   };
 
   const $ = (q) => document.querySelector(q);
 
-  // ---- Helper: lee el host de la URL o de localStorage ----
-  function getHostKey() {
-    const params = new URLSearchParams(location.search);
-    // Acepto varias claves por comodidad: ?host=a, ?h=b, ?w=a
-    const k = (params.get("host") || params.get("h") || params.get("w") || "").toLowerCase();
-    // guarda para siguientes aperturas (por si comparten el mismo link interno)
-    if (k && CONFIG.whatsapp[k]) {
-      localStorage.setItem("invite_host_key", k);
-      return k;
-    }
-    // si no viene en la URL, intento recuperar el último usado
-    const saved = localStorage.getItem("invite_host_key");
-    if (saved && CONFIG.whatsapp[saved]) return saved;
-
-    // por defecto
-    return CONFIG.defaultHostKey;
-  }
-
-  function getCurrentWhatsappNumber() {
-    const key = getHostKey();
-    return CONFIG.whatsapp[key] || CONFIG.whatsapp[CONFIG.defaultHostKey];
-  }
-
-  // ---- Pinta los nombres en el texto ----
+  // Nombre de la bebé
   document.getElementById('nombre-bebe').textContent = CONFIG.nombreBebe;
   document.getElementById('nombre-bebe-2').textContent = CONFIG.nombreBebe;
 
-  // ---- Archivo ICS (Agregar al calendario) ----
+  // Detecta anfitrión por querystring (?host=a | ?host=b)
+  const qs = new URLSearchParams(location.search);
+  const hostKey = (qs.get('host') || CONFIG.defaultHost).toLowerCase();
+  const WHATSAPP_DESTINO = CONFIG.anfitriones[hostKey] || CONFIG.anfitriones[CONFIG.defaultHost];
+
+  // ICS (igual que tenías)
   (function buildICS() {
     const title = `Baby Shower de ${CONFIG.nombreBebe}`;
     const start = toICSDate(new Date('2025-10-04T15:00:00-05:00'));
@@ -910,33 +888,33 @@ h1, h2, .title{
       'END:VEVENT','END:VCALENDAR'
     ].join('\n');
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    document.getElementById('btn-cal').href = url;
+    document.getElementById('btn-cal').href = URL.createObjectURL(blob);
   })();
 
-  function toICSDate(d) {
-    const pad = (n) => String(n).padStart(2, '0');
+  function toICSDate(d){
+    const pad = n => String(n).padStart(2,'0');
     return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
   }
 
-  // ---- Envío de confirmación por WhatsApp ----
+  // RSVP via WhatsApp (elige el número según ?host=… y codifica el texto)
   $('#form-rsvp').addEventListener('submit', (e) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const p = Object.fromEntries(fd.entries());
+    const p  = Object.fromEntries(fd.entries());
 
-    const resumen =
-      `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}. %0A` +
-      `Nombre: ${p.nombre || '—'} %0A` +
-      `WhatsApp: ${p.whatsapp || '—'} %0A` +
-      `Acompañantes: ${p.acompanantes || '0'} %0A` +
-      `Nota: ${p.nota || '—'}`;
+    const mensaje = [
+      `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}.`,
+      `Nombre: ${p.nombre || '—'}`,
+      `WhatsApp: ${p.whatsapp || '—'}`,
+      `Acompañantes: ${p.acompanantes || '0'}`,
+      `Nota: ${p.nota || '—'}`
+    ].join('\n');
 
-    const numero = getCurrentWhatsappNumber();
-    window.open(`https://wa.me/${numero}?text=${resumen}`, '_blank');
+    const urlWeb = `https://wa.me/${WHATSAPP_DESTINO}?text=${encodeURIComponent(mensaje)}`;
+    window.open(urlWeb, '_blank');
   });
 
-  // ---- Globos decorativos ----
+  // Globos (igual)
   (function spawnBalloons() {
     const root = document.getElementById('balloons');
     const count = 16;
@@ -950,16 +928,15 @@ h1, h2, .title{
     }
   })();
 
-  // ---- Portada: abrir al tocar la osita ----
+  // Abrir portada
   const cover = document.getElementById('cover');
   const openInvite = document.getElementById('openInvite');
-  if (openInvite) {
-    openInvite.addEventListener('click', () => {
-      cover.classList.add('hide');
-      setTimeout(() => cover.remove(), 700);
-    });
-  }
+  openInvite.addEventListener('click', () => {
+    cover.classList.add('hide');
+    setTimeout(() => cover.remove(), 700);
+  });
 </script>
+
 
   </body>
 
