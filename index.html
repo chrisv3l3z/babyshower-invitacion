@@ -853,78 +853,114 @@ h1, h2, .title{
     </main>
 
     <script>
-      const CONFIG = {
-        nombreBebe: "Alana",
-        anfitrionWhatsApp: "573102371071"
-      };
+  // ========= CONFIG =========
+  const CONFIG = {
+    nombreBebe: "Alana",
+    // Define aquí los dos números en formato internacional (sin +, sin espacios)
+    whatsapp: {
+      a: "573102371071",   // anfitrión A
+      b: "57XXXXXXXXX"     // anfitrión B
+    },
+    // Valor por defecto si el link NO trae parámetro
+    defaultHostKey: "a"
+  };
 
-      const $ = (q) => document.querySelector(q);
+  const $ = (q) => document.querySelector(q);
 
-      // Coloca nombre niña
-      document.getElementById('nombre-bebe').textContent = CONFIG.nombreBebe;
-      document.getElementById('nombre-bebe-2').textContent = CONFIG.nombreBebe;
+  // ---- Helper: lee el host de la URL o de localStorage ----
+  function getHostKey() {
+    const params = new URLSearchParams(location.search);
+    // Acepto varias claves por comodidad: ?host=a, ?h=b, ?w=a
+    const k = (params.get("host") || params.get("h") || params.get("w") || "").toLowerCase();
+    // guarda para siguientes aperturas (por si comparten el mismo link interno)
+    if (k && CONFIG.whatsapp[k]) {
+      localStorage.setItem("invite_host_key", k);
+      return k;
+    }
+    // si no viene en la URL, intento recuperar el último usado
+    const saved = localStorage.getItem("invite_host_key");
+    if (saved && CONFIG.whatsapp[saved]) return saved;
 
-      // Genera archivo ICS para "Agregar al calendario"
-      (function buildICS() {
-        const title = `Baby Shower de ${CONFIG.nombreBebe}`;
-        const start = toICSDate(new Date('2025-10-04T15:00:00-05:00'));
-        const end = toICSDate(new Date('2025-10-04T18:00:00-05:00'));
-        const ics = [
-          'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Invitación Baby Shower//ES', 'CALSCALE:GREGORIAN',
-          'BEGIN:VEVENT',
-          `SUMMARY:${title}`,
-          `DTSTART:${start}`,
-          `DTEND:${end}`,
-          // Ubicación actualizada con coordenadas
-          'LOCATION:Vereda San Bosco — Marinilla, Antioquia (6.155722, -75.2985)',
-          'DESCRIPTION=¡Te esperamos!',
-          'END:VEVENT', 'END:VCALENDAR'
-        ].join('');
-        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        document.getElementById('btn-cal').href = url;
-      })();
+    // por defecto
+    return CONFIG.defaultHostKey;
+  }
 
-      function toICSDate(d) {
-        const pad = (n) => String(n).padStart(2, '0');
-        return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
-      }
+  function getCurrentWhatsappNumber() {
+    const key = getHostKey();
+    return CONFIG.whatsapp[key] || CONFIG.whatsapp[CONFIG.defaultHostKey];
+  }
 
-      // RSVP via WhatsApp
-      $('#form-rsvp').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const fd = new FormData(e.currentTarget);
-        const p = Object.fromEntries(fd.entries());
-        const resumen = `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}. %0A` +
-          `Nombre: ${p.nombre || '—'} %0A` +
-          `WhatsApp: ${p.whatsapp || '—'} %0A` +
-          `Acompañantes: ${p.acompanantes || '0'} %0A` +
-          `Nota: ${p.nota || '—'}`;
-        window.open(`https://wa.me/${CONFIG.anfitrionWhatsApp}?text=${resumen}`, '_blank');
-      });
+  // ---- Pinta los nombres en el texto ----
+  document.getElementById('nombre-bebe').textContent = CONFIG.nombreBebe;
+  document.getElementById('nombre-bebe-2').textContent = CONFIG.nombreBebe;
 
-      // Globos aleatorios al cargar
-      (function spawnBalloons() {
-        const root = document.getElementById('balloons');
-        const count = 16; // varios globitos
-        for (let i = 0; i < count; i++) {
-          const b = document.createElement('div');
-          b.className = 'balloon' + (Math.random() > .5 ? ' white' : '');
-          b.style.left = Math.floor(Math.random() * 100) + 'vw';
-          b.style.animation = `floatUp ${14 + Math.random() * 10}s linear ${Math.random() * 6}s infinite`;
-          b.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
-          root.appendChild(b);
-        }
-      })();
+  // ---- Archivo ICS (Agregar al calendario) ----
+  (function buildICS() {
+    const title = `Baby Shower de ${CONFIG.nombreBebe}`;
+    const start = toICSDate(new Date('2025-10-04T15:00:00-05:00'));
+    const end   = toICSDate(new Date('2025-10-04T18:00:00-05:00'));
+    const ics = [
+      'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Invitación Baby Shower//ES','CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `SUMMARY:${title}`,
+      `DTSTART:${start}`,
+      `DTEND:${end}`,
+      'LOCATION:Vereda San Bosco — Marinilla, Antioquia (6.155722, -75.2985)',
+      'DESCRIPTION=¡Te esperamos!',
+      'END:VEVENT','END:VCALENDAR'
+    ].join('\n');
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    document.getElementById('btn-cal').href = url;
+  })();
 
-      // Portada: abrir al tocar la osita
-      const cover = document.getElementById('cover');
-      const openInvite = document.getElementById('openInvite');
-      openInvite.addEventListener('click', () => {
-        cover.classList.add('hide');
-        setTimeout(() => cover.remove(), 700);
-      });
-    </script>
+  function toICSDate(d) {
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+  }
+
+  // ---- Envío de confirmación por WhatsApp ----
+  $('#form-rsvp').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const p = Object.fromEntries(fd.entries());
+
+    const resumen =
+      `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}. %0A` +
+      `Nombre: ${p.nombre || '—'} %0A` +
+      `WhatsApp: ${p.whatsapp || '—'} %0A` +
+      `Acompañantes: ${p.acompanantes || '0'} %0A` +
+      `Nota: ${p.nota || '—'}`;
+
+    const numero = getCurrentWhatsappNumber();
+    window.open(`https://wa.me/${numero}?text=${resumen}`, '_blank');
+  });
+
+  // ---- Globos decorativos ----
+  (function spawnBalloons() {
+    const root = document.getElementById('balloons');
+    const count = 16;
+    for (let i = 0; i < count; i++) {
+      const b = document.createElement('div');
+      b.className = 'balloon' + (Math.random() > .5 ? ' white' : '');
+      b.style.left = Math.floor(Math.random() * 100) + 'vw';
+      b.style.animation = `floatUp ${14 + Math.random() * 10}s linear ${Math.random() * 6}s infinite`;
+      b.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+      root.appendChild(b);
+    }
+  })();
+
+  // ---- Portada: abrir al tocar la osita ----
+  const cover = document.getElementById('cover');
+  const openInvite = document.getElementById('openInvite');
+  if (openInvite) {
+    openInvite.addEventListener('click', () => {
+      cover.classList.add('hide');
+      setTimeout(() => cover.remove(), 700);
+    });
+  }
+</script>
+
   </body>
 
   </html>
