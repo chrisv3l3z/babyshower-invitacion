@@ -852,42 +852,55 @@ h1, h2, .title{
     </main>
 
     <script>
+  // =======================
+  // Configuración
+  // =======================
   const CONFIG = {
     nombreBebe: "Alana",
     anfitriones: {
-      a: "573102371071",   // anfitrión A
-      b: "573017384115"    // <-- pon aquí el número B con indicativo país, sin + ni espacios
+      a: "573102371071",  // anfitrión A (formato: indicativo país + número, sin + ni espacios)
+      b: "573017384115"   // anfitrión B
     },
-    defaultHost: "a"       // si no viene ?host=, usa este
+    defaultHost: "a"       // si no viene ?host= en la URL, usa este
   };
 
+  // Utilidad corta para seleccionar elementos
   const $ = (q) => document.querySelector(q);
 
-  // Nombre de la bebé
-  document.getElementById('nombre-bebe').textContent = CONFIG.nombreBebe;
+  // Pone el nombre de la bebé (en el H1)
+  const elNombre = document.getElementById('nombre-bebe');
+  if (elNombre) elNombre.textContent = CONFIG.nombreBebe;
 
-  // Detecta anfitrión por querystring (?host=a | ?host=b)
+  // Detecta anfitrión desde la URL (?host=a | ?host=b)
   const qs = new URLSearchParams(location.search);
   const hostKey = (qs.get('host') || CONFIG.defaultHost).toLowerCase();
   const WHATSAPP_DESTINO = CONFIG.anfitriones[hostKey] || CONFIG.anfitriones[CONFIG.defaultHost];
 
-  // ICS (igual que tenías)
+  // =======================
+  // Archivo ICS "Agregar al calendario"
+  // =======================
   (function buildICS() {
     const title = `Baby Shower de ${CONFIG.nombreBebe}`;
     const start = toICSDate(new Date('2025-10-04T15:00:00-05:00'));
     const end   = toICSDate(new Date('2025-10-04T18:00:00-05:00'));
     const ics = [
-      'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Invitación Baby Shower//ES','CALSCALE:GREGORIAN',
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Invitación Baby Shower//ES',
+      'CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',
       `SUMMARY:${title}`,
       `DTSTART:${start}`,
       `DTEND:${end}`,
       'LOCATION:Vereda San Bosco — Marinilla, Antioquia (6.155722, -75.2985)',
-      'DESCRIPTION=¡Te esperamos!',
-      'END:VEVENT','END:VCALENDAR'
+      'DESCRIPTION:¡Te esperamos!',
+      'END:VEVENT',
+      'END:VCALENDAR'
     ].join('\n');
+
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    document.getElementById('btn-cal').href = URL.createObjectURL(blob);
+    const linkCal = document.getElementById('btn-cal');
+    if (linkCal) linkCal.href = URL.createObjectURL(blob);
   })();
 
   function toICSDate(d){
@@ -895,27 +908,51 @@ h1, h2, .title{
     return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
   }
 
-  // RSVP via WhatsApp (elige el número según ?host=… y codifica el texto)
-  $('#form-rsvp').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const p  = Object.fromEntries(fd.entries());
+  // =======================
+  // Enlace robusto a WhatsApp con texto prellenado
+  // - En móvil usa wa.me
+  // - En desktop usa api.whatsapp.com (más estable con ?text=)
+  // =======================
+  function buildWaLink(phone, message) {
+    const text = encodeURIComponent(message);
+    const onlyDigits = phone.replace(/\D+/g, '');
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    if (isMobile) {
+      return `https://wa.me/${onlyDigits}?text=${text}`;
+    } else {
+      return `https://api.whatsapp.com/send?phone=${onlyDigits}&text=${text}`;
+    }
+  }
 
-    const mensaje = [
-      `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}.`,
-      `Nombre: ${p.nombre || '—'}`,
-      `WhatsApp: ${p.whatsapp || '—'}`,
-      `Acompañantes: ${p.acompanantes || '0'}`,
-      `Nota: ${p.nota || '—'}`
-    ].join('\n');
+  // =======================
+  // Formulario RSVP -> abre WhatsApp con el anfitrión correcto
+  // =======================
+  const form = $('#form-rsvp');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.currentTarget);
+      const p  = Object.fromEntries(fd.entries());
 
-    const urlWeb = `https://wa.me/${WHATSAPP_DESTINO}?text=${encodeURIComponent(mensaje)}`;
-    window.open(urlWeb, '_blank');
-  });
+      const mensaje = [
+        `Hola, confirmo asistencia al Baby Shower de ${CONFIG.nombreBebe}.`,
+        `Nombre: ${p.nombre || '—'}`,
+        `WhatsApp: ${p.whatsapp || '—'}`,
+        `Acompañantes: ${p.acompanantes || '0'}`,
+        `Nota: ${p.nota || '—'}`
+      ].join('\n');
 
-  // Globos (igual)
+      const urlWA = buildWaLink(WHATSAPP_DESTINO, mensaje);
+      window.open(urlWA, '_blank');
+    });
+  }
+
+  // =======================
+  // Globos decorativos
+  // =======================
   (function spawnBalloons() {
     const root = document.getElementById('balloons');
+    if (!root) return;
     const count = 16;
     for (let i = 0; i < count; i++) {
       const b = document.createElement('div');
@@ -927,13 +964,17 @@ h1, h2, .title{
     }
   })();
 
-  // Abrir portada
+  // =======================
+  // Portada: abrir al tocar la osita
+  // =======================
   const cover = document.getElementById('cover');
   const openInvite = document.getElementById('openInvite');
-  openInvite.addEventListener('click', () => {
-    cover.classList.add('hide');
-    setTimeout(() => cover.remove(), 700);
-  });
+  if (cover && openInvite) {
+    openInvite.addEventListener('click', () => {
+      cover.classList.add('hide');
+      setTimeout(() => cover.remove(), 700);
+    });
+  }
 </script>
 
 
